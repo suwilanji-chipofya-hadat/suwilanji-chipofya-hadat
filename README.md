@@ -1,7 +1,11 @@
 <h3 align="center">Fullstack Web Developer | AI Researcher</h3>
 
-<h3 align="left">Connect with me:</h3>
 <p align="left">
+I am a Fullstack Web Developer specializing in Django for backend development and using React and Vue for front-end design. With my expertise in these frameworks, I create robust and user-friendly web applications that provide seamless experiences.
+
+In addition to my web development skills, I am also an AI researcher focusing on deep learning projects and statistical analysis. My passion lies in exploring the potential of artificial intelligence to develop innovative and intelligent solutions.
+
+I thrive on the challenges of pushing boundaries and solving complex problems. Whether it's building scalable web applications or conducting advanced AI experiments, I combine my technical skills and creative mindset to deliver exceptional digital experiences.
 </p>
 
 <h3 align="left">Languages and Tools:</h3>
