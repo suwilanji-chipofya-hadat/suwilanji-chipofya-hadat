@@ -233,3 +233,74 @@ for epoch in range(100):
     loss.backward()
     optimizer.step()
     print(f"Epoch: {epoch+1}, Loss: {loss.item()}")
+# Import statements and classes...
+
+# Define the CharacterEncoder class to handle text-to-index encoding
+class CharacterEncoder:
+    def __init__(self, text):
+        self.chars = list(set(text))
+        self.char_to_idx = {ch: i + 1 for i, ch in enumerate(self.chars)}
+        self.idx_to_char = {i + 1: ch for i, ch in enumerate(self.chars)}
+
+    def encode(self):
+        return [self.char_to_idx[ch] for ch in text]
+
+# Rest of the code...
+# (Note that I'm skipping the testing part since the issues are in the training part)
+
+# Define the get_batch function to generate input and target batches
+def get_batch(data_x, data_y, batch_size, block_size):
+    ix = torch.randint(len(data_x) - block_size - 1, (batch_size,))
+    x = torch.stack([data_x[i: i + block_size] for i in ix])
+    y = torch.stack([data_y[i + 1: i + block_size + 1] for i in ix])
+    x, y = x.to(device), y.to(device)
+    return x, y
+
+# Generate random sample data
+text = None
+with open("english_text.txt", "r") as f:
+    text = f.read()
+src_data = CharacterEncoder(text)
+src_vocab_size = len(src_data.chars)
+src_data = src_data.encode()
+
+text1 = None
+with open("english_text.txt", "r") as f:
+    text1 = f.read()
+tgt_data = CharacterEncoder(text1)
+tgt_vocab_size = len(tgt_data.chars)
+tgt_data = tgt_data.encode()
+
+# Convert data to tensors and reshape
+src_2d = torch.tensor(src_data)
+tgt_2d = torch.tensor(tgt_data)
+
+# Assuming the max_seq_length is 100 as defined in the Transformer class
+# Make sure your data has a length that is a multiple of max_seq_length
+
+# Data reshaping to 3D tensors (batch_size, seq_length, input_dim)
+src_3d = src_2d.view(-1, max_seq_length, 1)
+tgt_3d = tgt_2d.view(-1, max_seq_length, 1)
+
+# The rest of the code...
+
+# Initialize the Transformer model and optimizer
+transformer = Transformer(src_vocab_size, tgt_vocab_size, d_model, num_heads, num_layers, d_ff, max_seq_length, dropout)
+transformer.to(device)
+
+criterion = nn.CrossEntropyLoss(ignore_index=0)
+optimizer = optim.Adam(transformer.parameters(), lr=0.0001, betas=(0.9, 0.98), eps=1e-9)
+
+# Training loop
+transformer.train()
+
+for epoch in range(100):
+    optimizer.zero_grad()
+    output = transformer(src_3d, tgt_3d)
+    output_flattened = output.contiguous().view(-1, tgt_vocab_size)
+    target_flattened = tgt_3d[:, 1:].contiguous().view(-1)
+    loss = criterion(output_flattened, target_flattened)
+    loss.backward()
+    optimizer.step()
+    print(f"Epoch: {epoch+1}, Loss: {loss.item()}")
+
